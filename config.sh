@@ -9,10 +9,8 @@ print_msg() {
   echo -e "${color}${msg}${reset}"
 }
 
+# Create the monitoring namespace
 kubectl create namespace monitoring
-print_msg $blue "Installing/Upgrading Prometheus-alertmanager"
-kubectl apply -f 0-configmaps/0-prometheus-alertmanager-config.yaml
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-helm repo update
-helm upgrade --install alertmanager prometheus-community/alertmanager -n monitoring -f 1-helm-values/0-prometheus-alertmanager-values.yaml
-print_msg $green "Prometheus applied successfully."
+kubectl apply -f 2-rules/0-prometheus-rule-test.yaml
+# Instalar Prometheus usando Helm
+helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -n monitoring -f 1-helm-values/1-prometheus-values.yaml
